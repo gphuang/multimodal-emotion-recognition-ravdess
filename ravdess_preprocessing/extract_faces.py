@@ -3,6 +3,7 @@ import os
 import numpy as np          
 import cv2
 from tqdm import tqdm
+import pathlib
 import torch
 from facenet_pytorch import MTCNN
 device = torch.device('cuda') if torch.cuda.is_available() else 'cpu'
@@ -18,7 +19,10 @@ save_length = 3.6 #seconds
 save_avi = True
 
 failed_videos = []
-root = '/lustre/scratch/chumache/RAVDESS_or/'
+# root = '/scratch/elec/puhe/c/ravdess/video_speech/'
+# root = '/lustre/scratch/chumache/RAVDESS_or/'
+root = '/scratch/work/huangg5/ravdess_ser/data/video_speech/'
+outdir= '/scratch/work/huangg5/ravdess_ser/data/cropped-av/'
 
 select_distributed = lambda m, n: [i*n//m + n//(2*m) for i in range(m)]
 n_processed = 0
@@ -46,7 +50,8 @@ for sess in tqdm(sorted(os.listdir(root))):
             frames_to_select = select_distributed(save_frames,framen)
             save_fps = save_frames // (framen // input_fps) 
             if save_avi:
-                out = cv2.VideoWriter(os.path.join(root, sess, filename[:-4]+'_facecroppad.avi'),cv2.VideoWriter_fourcc('M','J','P','G'), save_fps, (224,224))
+                pathlib.Path(os.path.join(outdir, sess)).mkdir(parents=True, exist_ok=True)
+                out = cv2.VideoWriter(os.path.join(outdir, sess, filename[:-4]+'_facecroppad.avi'),cv2.VideoWriter_fourcc('M','J','P','G'), save_fps, (224,224))
 
             numpy_video = []
             success = 0
@@ -93,7 +98,8 @@ for sess in tqdm(sorted(os.listdir(root))):
                     numpy_video.append(np.zeros((224,224,3), dtype=np.uint8))
             if save_avi:
                 out.release() 
-            np.save(os.path.join(root, sess, filename[:-4]+'_facecroppad.npy'), np.array(numpy_video))
+            pathlib.Path(os.path.join(outdir, sess)).mkdir(parents=True, exist_ok=True)
+            np.save(os.path.join(outdir, sess, filename[:-4]+'_facecroppad.npy'), np.array(numpy_video))
             if len(numpy_video) != 15:
                 print('Error', sess, filename)    
                             
