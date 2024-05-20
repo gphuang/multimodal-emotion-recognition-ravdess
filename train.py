@@ -4,7 +4,7 @@ This code is based on https://github.com/okankop/Efficient-3DCNNs
 import torch
 from torch.autograd import Variable
 import time
-from utils import AverageMeter, calculate_accuracy
+from utils import AverageMeter, calculate_accuracy, multi_acc
 
 def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
                 epoch_logger, batch_logger):
@@ -17,6 +17,7 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
+    class_acc = AverageMeter()
         
     end_time = time.time()
     for i, (audio_inputs, visual_inputs, targets) in enumerate(data_loader):
@@ -51,8 +52,6 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
                     audio_inputs = audio_inputs[shuffle]
                     visual_inputs = visual_inputs[shuffle]
                     targets = targets[shuffle]
-   
-  
 
         visual_inputs = visual_inputs.permute(0,2,1,3,4)
         visual_inputs = visual_inputs.reshape(visual_inputs.shape[0]*visual_inputs.shape[1], visual_inputs.shape[2], visual_inputs.shape[3], visual_inputs.shape[4])
@@ -69,6 +68,9 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
         top1.update(prec1, audio_inputs.size(0))
         top5.update(prec5, audio_inputs.size(0))
 
+        acc = multi_acc(outputs.data, targets.data)
+        class_acc.update(acc, audio_inputs.size(0))
+
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -83,6 +85,7 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
             'loss': losses.val.item(),
             'prec1': top1.val.item(),
             'prec5': top5.val.item(),
+            'acc': class_acc.val.item(),
             'lr': optimizer.param_groups[0]['lr']
         })
         if i % 10 ==0:
@@ -91,7 +94,8 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
                   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
                   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                   'Prec@1 {top1.val:.5f} ({top1.avg:.5f})\t'
-                  'Prec@5 {top5.val:.5f} ({top5.avg:.5f})'.format(
+                  'Prec@5 {top5.val:.5f} ({top5.avg:.5f})\t'
+                  'Acc {class_acc.val:.5f} ({class_acc.avg:.5f})'.format(
                       epoch,
                       i,
                       len(data_loader),
@@ -100,6 +104,7 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
                       loss=losses,
                       top1=top1,
                       top5=top5,
+                      class_acc=class_acc,
                       lr=optimizer.param_groups[0]['lr']))
 
     epoch_logger.log({
@@ -107,6 +112,7 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
         'loss': losses.avg.item(),
         'prec1': top1.avg.item(),
         'prec5': top5.avg.item(),
+        'acc': class_acc.avg.item(),
         'lr': optimizer.param_groups[0]['lr']
     })
 

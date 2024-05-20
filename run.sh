@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=47:59:59
+#SBATCH --time=23:59:59
 #SBATCH --mem=250G
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=6
@@ -22,4 +22,4 @@ source activate merr
 ## setup
 # update librosa to be compatible with numpy in requirements.txt
 # Done extract features
-# 158879 training
+# Done 158879 Prec1: 81.04167

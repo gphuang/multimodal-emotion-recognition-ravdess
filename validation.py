@@ -4,7 +4,7 @@ This code is based on https://github.com/okankop/Efficient-3DCNNs
 import torch
 from torch.autograd import Variable
 import time
-from utils import AverageMeter, calculate_accuracy
+from utils import AverageMeter, calculate_accuracy, multi_acc
 
 def val_epoch_multimodal(epoch, data_loader, model, criterion, opt, logger,modality='both',dist=None ):
     #for evaluation with single modality, specify which modality to keep and which distortion to apply for the other modaltiy:
@@ -18,6 +18,7 @@ def val_epoch_multimodal(epoch, data_loader, model, criterion, opt, logger,modal
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
+    class_acc = AverageMeter()
 
     end_time = time.time()
     for i, (inputs_audio, inputs_visual, targets) in enumerate(data_loader):
@@ -48,10 +49,7 @@ def val_epoch_multimodal(epoch, data_loader, model, criterion, opt, logger,modal
                 inputs_audio = torch.zeros(inputs_audio.size())
         inputs_visual = inputs_visual.permute(0,2,1,3,4)
         inputs_visual = inputs_visual.reshape(inputs_visual.shape[0]*inputs_visual.shape[1], inputs_visual.shape[2], inputs_visual.shape[3], inputs_visual.shape[4])
-        
 
-
-        
         targets = targets.to(opt.device)
         with torch.no_grad():
             inputs_visual = Variable(inputs_visual)
@@ -63,6 +61,9 @@ def val_epoch_multimodal(epoch, data_loader, model, criterion, opt, logger,modal
         top1.update(prec1, inputs_audio.size(0))
         top5.update(prec5, inputs_audio.size(0))
 
+        acc = multi_acc(outputs.data, targets.data)
+        class_acc.update(acc, inputs_audio.size(0))
+
         losses.update(loss.data, inputs_audio.size(0))
 
         batch_time.update(time.time() - end_time)
@@ -73,7 +74,8 @@ def val_epoch_multimodal(epoch, data_loader, model, criterion, opt, logger,modal
               'Data {data_time.val:.5f} ({data_time.avg:.5f})\t'
               'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
               'Prec@1 {top1.val:.5f} ({top1.avg:.5f})\t'
-              'Prec@5 {top5.val:.5f} ({top5.avg:.5f})'.format(
+              'Prec@5 {top5.val:.5f} ({top5.avg:.5f})\t'
+              'Acc {class_acc.val:.5f} ({class_acc.avg:.5f})'.format(
                   epoch,
                   i + 1,
                   len(data_loader),
@@ -81,14 +83,16 @@ def val_epoch_multimodal(epoch, data_loader, model, criterion, opt, logger,modal
                   data_time=data_time,
                   loss=losses,
                   top1=top1,
-                  top5=top5))
+                  top5=top5,
+                  class_acc=class_acc))
 
     logger.log({'epoch': epoch,
                 'loss': losses.avg.item(),
                 'prec1': top1.avg.item(),
-                'prec5': top5.avg.item()})
+                'prec5': top5.avg.item(),
+                'acc': class_acc.avg.item()})
 
-    return losses.avg.item(), top1.avg.item()
+    return losses.avg.item(), top1.avg.item(), class_acc.avg.item()
 
 def val_epoch(epoch, data_loader, model, criterion, opt, logger, modality='both', dist=None):
     print('validation at epoch {}'.format(epoch))

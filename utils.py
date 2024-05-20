@@ -48,7 +48,16 @@ class Logger(object):
         self.logger.writerow(write_values)
         self.log_file.flush()
 
-
+def multi_acc(y_pred, y_true):
+    """Computes classification accuracy."""
+    #y_pred_softmax = torch.log_softmax(y_pred, dim = 1)
+    # _, y_pred_tags = torch.max(y_pred_softmax, dim = 1)  
+    print('target', y_true, 'output', y_pred)  
+    correct_pred = (y_pred.cpu().numpy() == y_true.cpu().numpy()).float()
+    acc = correct_pred.sum() / len(correct_pred)
+    acc = torch.round(acc * 100)
+    print('acc', acc)
+    return acc
 
 def calculate_accuracy(output, target, topk=(1,), binary=False):
     """Computes the precision@k for the specified values of k"""

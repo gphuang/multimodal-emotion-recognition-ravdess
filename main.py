@@ -25,6 +25,7 @@ if __name__ == '__main__':
     opt = parse_opts()
     n_folds = 1
     test_accuracies = []
+    test_precicsions = []
     
     if opt.device != 'cpu':
         opt.device = 'cuda' if torch.cuda.is_available() else 'cpu'  
@@ -132,7 +133,7 @@ if __name__ == '__main__':
             
             if not opt.no_val:
                 
-                validation_loss, prec1 = val_epoch(i, val_loader, model, criterion, opt,
+                validation_loss, prec1, acc = val_epoch(i, val_loader, model, criterion, opt,
                                             val_logger)
                 is_best = prec1 > best_prec1
                 best_prec1 = max(prec1, best_prec1)
@@ -168,13 +169,16 @@ if __name__ == '__main__':
                 num_workers=opt.n_threads,
                 pin_memory=True)
             
-            test_loss, test_prec1 = val_epoch(10000, test_loader, model, criterion, opt,
+            test_loss, test_prec1, test_acc = val_epoch(10000, test_loader, model, criterion, opt,
                                             test_logger)
             
             with open(os.path.join(opt.result_path, 'test_set_bestval'+str(fold)+'.txt'), 'a') as f:
                     f.write('Prec1: ' + str(test_prec1) + '; Loss: ' + str(test_loss))
-            test_accuracies.append(test_prec1) 
+            test_precicsions.append(test_prec1) 
+            test_accuracies.append(test_acc)
                 
             
     with open(os.path.join(opt.result_path, 'test_set_bestval.txt'), 'a') as f:
-        f.write('Prec1: ' + str(np.mean(np.array(test_accuracies))) +'+'+str(np.std(np.array(test_accuracies))) + '\n')
+        f.write('Prec1: ' + str(np.mean(np.array(test_precicsions))) +'+'+str(np.std(np.array(test_precicsions))) + '\n')
+        f.write('Acc: ' + str(np.mean(np.array(test_accuracies))) +'+'+str(np.std(np.array(test_accuracies))) + '\n')
+
