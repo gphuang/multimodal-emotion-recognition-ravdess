@@ -21,9 +21,18 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
         
     end_time = time.time()
     for i, (audio_inputs, visual_inputs, targets) in enumerate(data_loader):
+        # audio_inputs: torch.Size([8, 10, 156])  i.e. (batch_size, n_mfcc, t)
+        # visual_inputs: torch.Size([8, 3, 15, 224, 224]) i.e. (batch_size, ...)
+        # targets: torch.Size([8]) i.e. (batch_size)
+        # output: torch.Size([8, 8])
+        # --mask softhard modality dropout
+        # audio_inputs: torch.Size([32, 10, 156])
+        # visual_inputs: torch.Size([480, 3, 224, 224])
+        # targets: torch.Size([32])
+        # output: torch.Size([32, 8])
+
         data_time.update(time.time() - end_time)
 
-   
         targets = targets.to(opt.device)
             
         if opt.mask is not None:
@@ -56,11 +65,15 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
         visual_inputs = visual_inputs.permute(0,2,1,3,4)
         visual_inputs = visual_inputs.reshape(visual_inputs.shape[0]*visual_inputs.shape[1], visual_inputs.shape[2], visual_inputs.shape[3], visual_inputs.shape[4])
         
-        audio_inputs = Variable(audio_inputs)
-        visual_inputs = Variable(visual_inputs)
+        audio_inputs = Variable(audio_inputs) # torch.Size([32, 10, 156])
+        visual_inputs = Variable(visual_inputs) # torch.Size([480, 3, 224, 224])
 
-        targets = Variable(targets)
-        outputs = model(audio_inputs, visual_inputs)
+        targets = Variable(targets) # torch.Size([32])
+        outputs = model(audio_inputs, visual_inputs) # torch.Size([32, 8])
+        for item in [audio_inputs, visual_inputs, targets, outputs]:
+            print(item.shape)
+        import sys
+        sys.exit(0)
         loss = criterion(outputs, targets)
 
         losses.update(loss.data, audio_inputs.size(0))

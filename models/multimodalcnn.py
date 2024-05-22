@@ -97,8 +97,6 @@ class EfficientFaceTemporal(nn.Module):
         x = self.forward_classifier(x)
         return x
         
-      
-
 def init_feature_extractor(model, path):
     if path == 'None' or path is None:
         return
@@ -107,12 +105,10 @@ def init_feature_extractor(model, path):
     pre_trained_dict = {key.replace("module.", ""): value for key, value in pre_trained_dict.items()}
     print('Initializing efficientnet')
     model.load_state_dict(pre_trained_dict, strict=False)
-
     
 def get_model(num_classes, task, seq_length):
     model = EfficientFaceTemporal([4, 8, 4], [29, 116, 232, 464, 1024], num_classes, task, seq_length)
     return model  
-
 
 def conv1d_block_audio(in_channels, out_channels, kernel_size=3, stride=1, padding='same'):
     return nn.Sequential(nn.Conv1d(in_channels, out_channels, kernel_size=kernel_size,stride=stride, padding='valid'),nn.BatchNorm1d(out_channels),
@@ -139,7 +135,6 @@ class AudioCNNPool(nn.Module):
         x = self.forward_classifier(x)
         return x
 
-
     def forward_stage1(self,x):            
         x = self.conv1d_0(x)
         x = self.conv1d_1(x)
@@ -154,9 +149,6 @@ class AudioCNNPool(nn.Module):
         x = x.mean([-1]) #pooling accross temporal dimension
         x1 = self.classifier_1(x)
         return x1
-
-    
-
 
 class MultiModalCNN(nn.Module):
     def __init__(self, num_classes=8, fusion='ia', seq_length=15, pretr_ef='None', num_heads=1):
@@ -184,7 +176,6 @@ class MultiModalCNN(nn.Module):
         
         elif fusion in ['ia']:
             input_dim_video = input_dim_video // 2
-            
             self.av1 = Attention(in_dim_k=input_dim_video, in_dim_q=input_dim_audio, out_dim=input_dim_audio, num_heads=num_heads)
             self.va1 = Attention(in_dim_k=input_dim_audio, in_dim_q=input_dim_video, out_dim=input_dim_video, num_heads=num_heads)
 
@@ -193,9 +184,12 @@ class MultiModalCNN(nn.Module):
                     nn.Linear(e_dim*2, num_classes),
                 )
         
-            
-
     def forward(self, x_audio, x_visual):
+        """"
+        Input
+        x_audio: torch.Size([32, 10, 156])
+        x_visual: torch.Size([480, 3, 224, 224])
+        """
 
         if self.fusion == 'lt':
             return self.forward_transformer(x_audio, x_visual)
@@ -205,9 +199,7 @@ class MultiModalCNN(nn.Module):
        
         elif self.fusion == 'it':
             return self.forward_feature_3(x_audio, x_visual)
-
- 
-        
+    
     def forward_feature_3(self, x_audio, x_visual):
         x_audio = self.audio_model.forward_stage1(x_audio)
         x_visual = self.visual_model.forward_features(x_visual)
@@ -236,38 +228,43 @@ class MultiModalCNN(nn.Module):
         return x1
     
     def forward_feature_2(self, x_audio, x_visual):
-        x_audio = self.audio_model.forward_stage1(x_audio)
-        x_visual = self.visual_model.forward_features(x_visual)
-        x_visual = self.visual_model.forward_stage1(x_visual)
+        """"
+        Input
+        x_audio: torch.Size([32, 10, 156])
+        x_visual: torch.Size([480, 3, 224, 224])
+        """
+        x_audio = self.audio_model.forward_stage1(x_audio) # torch.Size([32, 128, 150])
+        x_visual = self.visual_model.forward_features(x_visual) # torch.Size([480, 1024])
+        x_visual = self.visual_model.forward_stage1(x_visual) # torch.Size([32, 64, 15])
 
-        proj_x_a = x_audio.permute(0,2,1)
-        proj_x_v = x_visual.permute(0,2,1)
+        proj_x_a = x_audio.permute(0,2,1) # torch.Size([32, 150, 128])
+        proj_x_v = x_visual.permute(0,2,1) # torch.Size([32, 15, 64])
 
-        _, h_av = self.av1(proj_x_v, proj_x_a)
-        _, h_va = self.va1(proj_x_a, proj_x_v)
+        _, h_av = self.av1(proj_x_v, proj_x_a) # torch.Size([32, 1, 150, 15])
+        _, h_va = self.va1(proj_x_a, proj_x_v) # torch.Size([32, 1, 15, 150])
         
         if h_av.size(1) > 1: #if more than 1 head, take average
             h_av = torch.mean(h_av, axis=1).unsqueeze(1)
        
-        h_av = h_av.sum([-2])
+        h_av = h_av.sum([-2]) # torch.Size([32, 1, 15])
 
         if h_va.size(1) > 1: #if more than 1 head, take average
             h_va = torch.mean(h_va, axis=1).unsqueeze(1)
 
-        h_va = h_va.sum([-2])
+        h_va = h_va.sum([-2]) # torch.Size([32, 1, 150])
 
-        x_audio = h_va*x_audio
-        x_visual = h_av*x_visual
-        
-        x_audio = self.audio_model.forward_stage2(x_audio)       
-        x_visual = self.visual_model.forward_stage2(x_visual)
+        x_audio = h_va*x_audio # torch.Size([32, 128, 150])
+        x_visual = h_av*x_visual # torch.Size([32, 64, 15])
 
-        audio_pooled = x_audio.mean([-1]) #mean accross temporal dimension
-        video_pooled = x_visual.mean([-1])
+        x_audio = self.audio_model.forward_stage2(x_audio) # torch.Size([32, 128, 144])      
+        x_visual = self.visual_model.forward_stage2(x_visual) # torch.Size([32, 128, 15])
+
+        audio_pooled = x_audio.mean([-1]) #mean accross temporal dimension torch.Size([32, 128])
+        video_pooled = x_visual.mean([-1]) # torch.Size([32, 128])
         
-        x = torch.cat((audio_pooled, video_pooled), dim=-1)
+        x = torch.cat((audio_pooled, video_pooled), dim=-1) # torch.Size([32, 256])
         
-        x1 = self.classifier_1(x)
+        x1 = self.classifier_1(x) # torch.Size([32, 8])
         return x1
 
     def forward_transformer(self, x_audio, x_visual):

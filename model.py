@@ -12,7 +12,6 @@ def generate_model(opt):
     if opt.model == 'multimodalcnn':   
         model = multimodalcnn.MultiModalCNN(opt.n_classes, fusion = opt.fusion, seq_length = opt.sample_duration, pretr_ef=opt.pretrain_path, num_heads=opt.num_heads)
 
-
     if opt.device != 'cpu':
         model = model.to(opt.device)
         model = nn.DataParallel(model, device_ids=None)

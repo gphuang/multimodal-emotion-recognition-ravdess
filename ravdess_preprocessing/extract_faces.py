@@ -8,7 +8,6 @@ import torch
 from facenet_pytorch import MTCNN
 device = torch.device('cuda') if torch.cuda.is_available() else 'cpu'
 
-
 mtcnn = MTCNN(image_size=(720, 1280), device=device)
 
 #mtcnn.to(device)

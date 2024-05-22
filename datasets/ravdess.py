@@ -12,7 +12,14 @@ import librosa
 
 
 def video_loader(video_dir_path):
-    video = np.load(video_dir_path)    
+    """
+    input: 
+    video_dir_path e.g. 'cropped-av/Actor_01/01-01-06-01-02-02-01_facecroppad.npy'
+    video.shape (15, 224, 224, 3)
+
+    see: ravdess_preprocessing/extract_faces.py
+    """
+    video = np.load(video_dir_path)  
     video_data = []
     for i in range(np.shape(video)[0]):
         video_data.append(Image.fromarray(video[i,:,:,:]))    
@@ -48,6 +55,11 @@ def make_dataset(subset, annotation_path):
        
 
 class RAVDESS(data.Dataset):
+    """
+    y, sr: (79380,), 22050 i.e. 3.6 seconds
+    audio_features: (10, 156) i.e. output length = (seconds) * (sample rate) / (hop_length)
+    clip:  torch.Size([3, 15, 224, 224])
+    """
     def __init__(self,                 
                  annotation_path,
                  subset,
@@ -62,7 +74,6 @@ class RAVDESS(data.Dataset):
     def __getitem__(self, index):
         target = self.data[index]['label']
                 
-
         if self.data_type == 'video' or self.data_type == 'audiovisual':        
             path = self.data[index]['video_path']
             clip = self.loader(path)
@@ -70,21 +81,21 @@ class RAVDESS(data.Dataset):
             if self.spatial_transform is not None:               
                 self.spatial_transform.randomize_parameters()
                 clip = [self.spatial_transform(img) for img in clip]            
-            clip = torch.stack(clip, 0).permute(1, 0, 2, 3) 
+            clip = torch.stack(clip, 0).permute(1, 0, 2, 3) # torch.Size([3, 15, 224, 224])
             
             if self.data_type == 'video':
                 return clip, target
             
         if self.data_type == 'audio' or self.data_type == 'audiovisual':
             path = self.data[index]['audio_path']
-            y, sr = load_audio(path, sr=22050) 
+            y, sr = load_audio(path, sr=22050) # (79380,), 22050 i.e. 3.6 seconds
             
             if self.audio_transform is not None:
                  self.audio_transform.randomize_parameters()
                  y = self.audio_transform(y)     
                  
             mfcc = get_mfccs(y, sr)            
-            audio_features = mfcc 
+            audio_features = mfcc # (10, 156) i.e. output length = (seconds) * (sample rate) / (hop_length)
 
             if self.data_type == 'audio':
                 return audio_features, target

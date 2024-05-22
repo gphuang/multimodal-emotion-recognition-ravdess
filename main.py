@@ -52,6 +52,16 @@ if __name__ == '__main__':
 
         criterion = nn.CrossEntropyLoss()
         criterion = criterion.to(opt.device)
+
+        optimizer = optim.SGD(
+                parameters,
+                lr=opt.learning_rate,
+                momentum=opt.momentum,
+                dampening=opt.dampening,
+                weight_decay=opt.weight_decay,
+                nesterov=False)
+        scheduler = lr_scheduler.ReduceLROnPlateau(
+            optimizer, 'min', patience=opt.lr_patience)
         
         if not opt.no_train:
             
@@ -61,6 +71,11 @@ if __name__ == '__main__':
                 transforms.ToTensor(opt.video_norm_value)])
         
             training_data = get_training_set(opt, spatial_transform=video_transform) 
+            audio_inputs, visual_inputs, targets = next(iter(training_data))
+            # print(f'a: {audio_inputs.shape}') # (10, 156)
+            # print(f'v: {visual_inputs.shape}') # torch.Size([3, 15, 224, 224])
+            # print(f'targets: {targets}') # int: e.g. 5
+            # sys.exit(0)
         
             train_loader = torch.utils.data.DataLoader(
                 training_data,
@@ -75,17 +90,6 @@ if __name__ == '__main__':
             train_batch_logger = Logger(
                 os.path.join(opt.result_path, 'train_batch'+str(fold)+'.log'),
                 ['epoch', 'batch', 'iter', 'loss', 'prec1', 'prec5', 'lr'])
-            
-
-            optimizer = optim.SGD(
-                parameters,
-                lr=opt.learning_rate,
-                momentum=opt.momentum,
-                dampening=opt.dampening,
-                weight_decay=opt.weight_decay,
-                nesterov=False)
-            scheduler = lr_scheduler.ReduceLROnPlateau(
-                optimizer, 'min', patience=opt.lr_patience)
             
         if not opt.no_val:
             video_transform = transforms.Compose([
@@ -142,7 +146,8 @@ if __name__ == '__main__':
                 'arch': opt.arch,
                 'state_dict': model.state_dict(),
                 'optimizer': optimizer.state_dict(),
-                'best_prec1': best_prec1
+                'best_prec1': best_prec1,
+                'acc': acc
                 }
                
                 save_checkpoint(state, is_best, opt, fold)
@@ -159,7 +164,7 @@ if __name__ == '__main__':
             test_data = get_test_set(opt, spatial_transform=video_transform) 
         
             #load best model
-            best_state = torch.load('%s/%s_best' % (opt.result_path, opt.store_name)+str(fold)+'.pth')
+            best_state = torch.load('%s/%s_best' % (opt.result_path, opt.store_name)+str(fold)+'.pth', map_location=torch.device(opt.device))
             model.load_state_dict(best_state['state_dict'])
         
             test_loader = torch.utils.data.DataLoader(

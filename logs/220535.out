@@ -1,0 +1,101 @@
+/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/utils/data/dataloader.py:558: UserWarning: This DataLoader will create 16 worker processes in total. Our suggested max number of worker in current system is 6, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/utils/data/dataloader.py:558: UserWarning: This DataLoader will create 16 worker processes in total. Our suggested max number of worker in current system is 6, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+Namespace(annotation_path='ravdess_preprocessing/annotations.txt', result_path='results', store_name='RAVDESS_multimodalcnn_15', dataset='RAVDESS', n_classes=8, model='multimodalcnn', num_heads=1, device='cuda', sample_size=224, sample_duration=15, learning_rate=0.04, momentum=0.9, lr_steps=[40, 55, 65, 70, 200, 250], dampening=0.9, weight_decay=0.001, lr_patience=10, batch_size=12, n_epochs=100, begin_epoch=1, resume_path='', pretrain_path='EfficientFace_Trained_on_AffectNet7.pth.tar', no_train=False, no_val=False, test=True, test_subset='test', n_threads=16, video_norm_value=255, manual_seed=1, fusion='ia', mask='softhard', arch='multimodalcnn')
+Initializing efficientnet
+Total number of trainable parameters:  1854766
+train at epoch 1
+train at epoch 1
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/transforms.py:74: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+Traceback (most recent call last):
+  File "/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/main.py", line 123, in <module>
+    train_epoch(i, train_loader, model, criterion, optimizer, opt,
+  File "/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/train.py", line 125, in train_epoch
+    train_epoch_multimodal(epoch,  data_loader, model, criterion, optimizer, opt, epoch_logger, batch_logger)
+  File "/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/train.py", line 63, in train_epoch_multimodal
+    outputs = model(audio_inputs, visual_inputs)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/parallel/data_parallel.py", line 183, in forward
+    return self.module(*inputs[0], **module_kwargs[0])
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/models/multimodalcnn.py", line 204, in forward
+    return self.forward_feature_2(x_audio, x_visual)
+  File "/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/models/multimodalcnn.py", line 240, in forward_feature_2
+    x_visual = self.visual_model.forward_features(x_visual)
+  File "/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/models/multimodalcnn.py", line 67, in forward_features
+    x = self.stage4(x)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/container.py", line 217, in forward
+    input = module(input)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/scratch/work/huangg5/.conda_envs/merr/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/scratch/work/huangg5/ravdess_ser/multimodal-emotion-recognition-ravdess/models/efficientface.py", line 128, in forward
+    out = torch.cat((x1, self.branch2(x2)), dim=1)
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB. GPU 0 has a total capacity of 15.77 GiB of which 12.44 MiB is free. Including non-PyTorch memory, this process has 15.74 GiB memory in use. Of the allocated memory 15.18 GiB is allocated by PyTorch, and 169.02 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Command exited with non-zero status 1
+	Command being timed: "python main.py"
+	User time (seconds): 84.38
+	System time (seconds): 69.30
+	Percent of CPU this job got: 227%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:07.67
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 5682572
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 111163
+	Minor (reclaiming a frame) page faults: 3471965
+	Voluntary context switches: 165217
+	Involuntary context switches: 24172484
+	Swaps: 0
+	File system inputs: 2713296
+	File system outputs: 96
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
