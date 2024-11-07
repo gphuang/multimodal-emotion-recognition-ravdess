@@ -78,15 +78,14 @@ class EfficientFaceTemporal(nn.Module):
         x = self.conv1d_0(x)
         x = self.conv1d_1(x)
         return x
-        
-        
+               
     def forward_stage2(self, x):
         x = self.conv1d_2(x)
         x = self.conv1d_3(x)
         return x
     
     def forward_classifier(self, x):
-        x = x.mean([-1]) #pooling accross temporal dimension
+        x = x.mean([-1]) # pooling accross temporal dimension
         x1 = self.classifier_1(x)
         return x1
     
@@ -234,7 +233,7 @@ class MultiModalCNN(nn.Module):
         x_visual: torch.Size([480, 3, 224, 224])
         """
         x_audio = self.audio_model.forward_stage1(x_audio) # torch.Size([32, 128, 150])
-        x_visual = self.visual_model.forward_features(x_visual) # torch.Size([480, 1024])
+        x_visual = self.visual_model.forward_features(x_visual) # torch.Size([32, 480, 1024])
         x_visual = self.visual_model.forward_stage1(x_visual) # torch.Size([32, 64, 15])
 
         proj_x_a = x_audio.permute(0,2,1) # torch.Size([32, 150, 128])
@@ -280,7 +279,7 @@ class MultiModalCNN(nn.Module):
         h_av = self.av(proj_x_v, proj_x_a)
         h_va = self.va(proj_x_a, proj_x_v)
        
-        audio_pooled = h_av.mean([1]) #mean accross temporal dimension
+        audio_pooled = h_av.mean([1]) # mean accross temporal dimension
         video_pooled = h_va.mean([1])
 
         x = torch.cat((audio_pooled, video_pooled), dim=-1)  

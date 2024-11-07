@@ -9,17 +9,19 @@
 
 module load mamba
 
-source activate merr
+source activate ser_venv
 
 ## Jupyter: https://scicomp.aalto.fi/triton/apps/jupyter/
 # module load jupyterhub/live
 # envkernel conda --user --name huangg5 --display-name="merr" /scratch/work/huangg5/.conda_envs/merr
 
-# cd ravdess_preprocessing
-# python extract_faces.py
-# python extract_audios.py
-# python create_annotations.py
-# cd ..
+cd ravdess_preprocessing
+python extract_faces.py
+# 4273146 save_length=None
+python extract_audios.py
+python create_annotations.py
+# 
+cd ..
 
 /usr/bin/time -v python main.py 
 # python main.py --no_train
@@ -30,3 +32,16 @@ source activate merr
 # 162328 Prec1: 81.04167
 # 221383 multi_acc: 80.7
 # 232175 --test 80.7
+
+## Architecture
+# CNN
+# RNN
+# CRNN
+# CRNN-ATTN
+
+## Temporal
+# 1~10 seconds
+# first last 
+
+## Modality
+#

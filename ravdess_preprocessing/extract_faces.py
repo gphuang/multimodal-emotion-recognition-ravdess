@@ -14,14 +14,19 @@ mtcnn = MTCNN(image_size=(720, 1280), device=device)
 save_frames = 15
 input_fps = 30
 
-save_length = 3.6 #seconds
-save_avi = True
+save_length = None # 1 # 3 #seconds
+save_avi = False
 
 failed_videos = []
-# root = '/scratch/elec/puhe/c/ravdess/video_speech/'
+
 # root = '/lustre/scratch/chumache/RAVDESS_or/'
-root = '/scratch/work/huangg5/ravdess_ser/data/video_speech/'
-outdir= '/scratch/work/huangg5/ravdess_ser/data/cropped-av/'
+root = '/scratch/elec/puhe/c/ravdess/video_speech/'
+outdir= '/scratch/work/huangg5/ravdess_ser/data/av/'
+
+if save_length:
+    _cropped=f'_cropped_{save_length}sec'
+else:
+    _cropped='_full'
 
 select_distributed = lambda m, n: [i*n//m + n//(2*m) for i in range(m)]
 n_processed = 0
@@ -40,17 +45,18 @@ for sess in tqdm(sorted(os.listdir(root))):
                 framen += 1
             cap = cv2.VideoCapture(os.path.join(root, sess, filename))
 
-            if save_length*input_fps > framen:                    
-                skip_begin = int((framen - (save_length*input_fps)) // 2)
-                for i in range(skip_begin):
-                    _, im = cap.read() 
-                    
-            framen = int(save_length*input_fps)    
+            if save_length:
+                if save_length*input_fps > framen:                    
+                    skip_begin = int((framen - (save_length*input_fps)) // 2)
+                    for i in range(skip_begin):
+                        _, im = cap.read() 
+                        
+                framen = int(save_length*input_fps)    
             frames_to_select = select_distributed(save_frames,framen)
             save_fps = save_frames // (framen // input_fps) 
             if save_avi:
                 pathlib.Path(os.path.join(outdir, sess)).mkdir(parents=True, exist_ok=True)
-                out = cv2.VideoWriter(os.path.join(outdir, sess, filename[:-4]+'_facecroppad.avi'),cv2.VideoWriter_fourcc('M','J','P','G'), save_fps, (224,224))
+                out = cv2.VideoWriter(os.path.join(outdir, sess, filename[:-4]+_cropped+'.avi'),cv2.VideoWriter_fourcc('M','J','P','G'), save_fps, (224,224))
 
             numpy_video = []
             success = 0
@@ -98,7 +104,7 @@ for sess in tqdm(sorted(os.listdir(root))):
             if save_avi:
                 out.release() 
             pathlib.Path(os.path.join(outdir, sess)).mkdir(parents=True, exist_ok=True)
-            np.save(os.path.join(outdir, sess, filename[:-4]+'_facecroppad.npy'), np.array(numpy_video))
+            np.save(os.path.join(outdir, sess, filename[:-4]+_cropped+'.npy'), np.array(numpy_video))
             if len(numpy_video) != 15:
                 print('Error', sess, filename)    
                             

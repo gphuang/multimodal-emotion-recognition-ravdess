@@ -70,10 +70,6 @@ def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
 
         targets = Variable(targets) # torch.Size([32])
         outputs = model(audio_inputs, visual_inputs) # torch.Size([32, 8])
-        for item in [audio_inputs, visual_inputs, targets, outputs]:
-            print(item.shape)
-        import sys
-        sys.exit(0)
         loss = criterion(outputs, targets)
 
         losses.update(loss.data, audio_inputs.size(0))
