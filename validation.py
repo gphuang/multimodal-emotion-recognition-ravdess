@@ -9,7 +9,6 @@ from utils import AverageMeter, calculate_accuracy, multi_acc
 def val_epoch_multimodal(epoch, data_loader, model, criterion, opt, logger,modality='both',dist=None ):
     #for evaluation with single modality, specify which modality to keep and which distortion to apply for the other modaltiy:
     #'noise', 'addnoise' or 'zeros'. for paper procedure, with 'softhard' mask use 'zeros' for evaluation, with 'noise' use 'noise'
-    print('validation at epoch {}'.format(epoch))
     assert modality in ['both', 'audio', 'video']    
     model.eval()
 

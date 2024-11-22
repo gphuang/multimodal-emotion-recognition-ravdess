@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=00:59:59
+#SBATCH --time=10:59:59
 #SBATCH --mem=250G
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=6
@@ -15,39 +15,33 @@ source activate ser_venv
 # module load jupyterhub/live
 # envkernel conda --user --name huangg5 --display-name="merr" /scratch/work/huangg5/.conda_envs/merr
 
-cd ravdess_preprocessing
-python extract_faces.py  # save_length=None (full), 1, 3
-python extract_audios.py
-python create_annotations.py 
-cd ..
+# cd ravdess_preprocessing
+# python extract_faces.py  # save_length=None (full), 1, 3
+# python extract_audios.py
+# python create_annotations.py 
+# cd ..
 
-ANNOTATION_PATH="ravdess_preprocessing/annotations_cropped_3sec_fold1.txt"
-/usr/bin/time -v python main.py --annotation_path $ANNOTATION_PATH
-# 1~3sec
-# 4332800 4sec
+
+ANNOTATION_PATH="ravdess_preprocessing/annotations_cropped_1sec_fold1.txt"
+# /usr/bin/time -v python main.py --annotation_path $ANNOTATION_PATH --n_epochs 1 
 # python main.py --no_train
-# python main.py --no_train --no_val --test
+python main.py --no_train --no_val --test --annotation_path $ANNOTATION_PATH # --n_epochs 1
 
-## Baseline
+## setup
 # update librosa to be compatible with numpy in requirements.txt
 # 162328 Prec1: 81.04167
 # 221383 multi_acc: 80.7
 # 232175 --test 80.7
 
-## Impact of Time
-# 1~10 seconds
-# first last 
-
-## Impact of Embeddings
-# ravdess_avfeats/a,v
-
-## Contribution of Architecture
+## Architecture
 # CNN
 # RNN
 # CRNN
 # CRNN-ATTN
 
+## Temporal
+# 1~10 seconds
+# first last 
 
-
-## Contribution of Modality
+## Modality
 #

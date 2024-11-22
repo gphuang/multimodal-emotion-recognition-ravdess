@@ -6,6 +6,8 @@ from tqdm import tqdm
 import pathlib
 import torch
 from facenet_pytorch import MTCNN
+import argparse
+
 device = torch.device('cuda') if torch.cuda.is_available() else 'cpu'
 
 mtcnn = MTCNN(image_size=(720, 1280), device=device)
@@ -14,7 +16,7 @@ mtcnn = MTCNN(image_size=(720, 1280), device=device)
 save_frames = 15
 input_fps = 30
 
-save_length = None # 1 # 3 #seconds
+save_length = 4 #None 1~3.6 sec
 save_avi = False
 
 failed_videos = []

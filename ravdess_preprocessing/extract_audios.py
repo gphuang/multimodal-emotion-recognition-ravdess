@@ -14,7 +14,7 @@ import pathlib
 # root = '/scratch/work/huangg5/ravdess_ser/data/audio_speech'
 root = '/scratch/elec/puhe/c/ravdess/audio_speech/' 
 outdir = '/scratch/work/huangg5/ravdess_ser/data/av/'
-save_length =  None #1 #3.6 #sec
+save_length = 4 #None 1~3.6sec #? what if > max len 
 
 if save_length:
     _cropped=f'_cropped_{save_length}sec'

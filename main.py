@@ -43,7 +43,6 @@ if __name__ == '__main__':
         #if opt.dataset == 'RAVDESS':
         #    opt.annotation_path = '/lustre/scratch/chumache/ravdess-develop/annotations_croppad_fold'+str(fold+1)+'.txt'
 
-        print(opt)
         with open(os.path.join(opt.result_path, 'opts'+str(time.time())+str(fold)+'.json'), 'w') as opt_file:
             json.dump(vars(opt), opt_file)
             
@@ -124,8 +123,7 @@ if __name__ == '__main__':
 
             if not opt.no_train:
                 adjust_learning_rate(optimizer, i, opt)
-                train_epoch(i, train_loader, model, criterion, optimizer, opt,
-                            train_logger, train_batch_logger)
+                train_epoch(i, train_loader, model, criterion, optimizer, opt, train_logger, train_batch_logger)
                 state = {
                     'epoch': i,
                     'arch': opt.arch,
@@ -174,8 +172,8 @@ if __name__ == '__main__':
                 num_workers=opt.n_threads,
                 pin_memory=True)
             
-            test_loss, test_prec1, test_acc = val_epoch(10000, test_loader, model, criterion, opt,
-                                            test_logger)
+            test_loss, test_prec1, test_acc = val_epoch(opt.n_epochs, test_loader, model, criterion, opt,
+                                            test_logger)  
             
             with open(os.path.join(opt.result_path, 'test_set_bestval'+str(fold)+'.txt'), 'a') as f:
                     f.write('Prec1: ' + str(test_prec1) + '; Loss: ' + str(test_loss))

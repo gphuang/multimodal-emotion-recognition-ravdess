@@ -7,9 +7,7 @@ import time
 from utils import AverageMeter, calculate_accuracy, multi_acc
 
 def train_epoch_multimodal(epoch, data_loader, model, criterion, optimizer, opt,
-                epoch_logger, batch_logger):
-    print('train at epoch {}'.format(epoch))
-    
+                epoch_logger, batch_logger):    
     model.train()
 
     batch_time = AverageMeter()
